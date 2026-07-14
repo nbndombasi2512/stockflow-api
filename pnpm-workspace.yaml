@@ -1,8 +1,7 @@
 packages: []
 verifyDepsBeforeRun: false
-ignoredBuiltDependencies:
-  - unrs-resolver
-onlyBuiltDependencies:
-  - "@prisma/client"
-  - "@prisma/engines"
-  - prisma
+allowBuilds:
+  "@prisma/client": true
+  "@prisma/engines": true
+  prisma: true
+  unrs-resolver: false
