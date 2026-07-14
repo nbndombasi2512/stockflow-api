@@ -36,19 +36,19 @@ Prisma Client is generated on `pnpm install` (`postinstall`) and via `pnpm prism
 
 ## Scripts
 
-| Command                    | Description                                      |
-| -------------------------- | ------------------------------------------------ |
-| `pnpm dev`                 | Start in watch mode                              |
-| `pnpm build`               | Compile to `dist/`                               |
-| `pnpm start`               | Run the compiled server                          |
-| `pnpm type-check`          | Type-check without emitting                      |
-| `pnpm lint`                | Lint `src`                                       |
-| `pnpm test`                | Run unit tests                                   |
-| `pnpm db:up`               | Start local Postgres (`docker compose up -d`)    |
-| `pnpm db:down`             | Stop local Postgres (`docker compose down`)      |
-| `pnpm prisma:generate`     | Generate Prisma Client                           |
-| `pnpm prisma:migrate:dev`  | Create/apply migrations in development           |
-| `pnpm prisma:migrate:deploy` | Apply migrations (CI / production)             |
+| Command                      | Description                                   |
+| ---------------------------- | --------------------------------------------- |
+| `pnpm dev`                   | Start in watch mode                           |
+| `pnpm build`                 | Compile to `dist/`                            |
+| `pnpm start`                 | Run the compiled server                       |
+| `pnpm type-check`            | Type-check without emitting                   |
+| `pnpm lint`                  | Lint `src`                                    |
+| `pnpm test`                  | Run unit tests                                |
+| `pnpm db:up`                 | Start local Postgres (`docker compose up -d`) |
+| `pnpm db:down`               | Stop local Postgres (`docker compose down`)   |
+| `pnpm prisma:generate`       | Generate Prisma Client                        |
+| `pnpm prisma:migrate:dev`    | Create/apply migrations in development        |
+| `pnpm prisma:migrate:deploy` | Apply migrations (CI / production)            |
 
 ## Environment variables
 

@@ -6,16 +6,16 @@ Always create a new branch for a new ticket, do not make changes directly on mai
 
 ## Project overview
 
-| Area | Choice |
-|------|--------|
-| Runtime | Node >= 22.13 |
+| Area            | Choice                                        |
+| --------------- | --------------------------------------------- |
+| Runtime         | Node >= 22.13                                 |
 | Package manager | pnpm 11.6.0 (run all commands from repo root) |
-| Framework | NestJS 11 |
-| Database | PostgreSQL 16 via Docker Compose |
-| ORM | Prisma 6 |
-| Testing | Jest 30 + `@nestjs/testing` |
-| Linting | ESLint 10 flat config (`eslint.config.mjs`) |
-| Language | TypeScript 6, strict mode, `module: nodenext` |
+| Framework       | NestJS 11                                     |
+| Database        | PostgreSQL 16 via Docker Compose              |
+| ORM             | Prisma 6                                      |
+| Testing         | Jest 30 + `@nestjs/testing`                   |
+| Linting         | ESLint 10 flat config (`eslint.config.mjs`)   |
+| Language        | TypeScript 6, strict mode, `module: nodenext` |
 
 This repo is **not** part of a parent pnpm/Turbo workspace. It has its own `node_modules` and lockfile.
 
@@ -30,18 +30,18 @@ pnpm prisma:migrate:dev
 
 ## Commands
 
-| Task | Command |
-|------|---------|
-| Dev server (watch) | `pnpm dev` |
-| Build | `pnpm build` |
-| Production start | `pnpm start` |
-| Type-check | `pnpm type-check` |
-| Lint | `pnpm lint` |
-| Test | `pnpm test` |
-| Start Postgres | `pnpm db:up` |
-| Stop Postgres | `pnpm db:down` |
-| Generate Prisma client | `pnpm prisma:generate` |
-| Dev migrations | `pnpm prisma:migrate:dev` |
+| Task                        | Command                      |
+| --------------------------- | ---------------------------- |
+| Dev server (watch)          | `pnpm dev`                   |
+| Build                       | `pnpm build`                 |
+| Production start            | `pnpm start`                 |
+| Type-check                  | `pnpm type-check`            |
+| Lint                        | `pnpm lint`                  |
+| Test                        | `pnpm test`                  |
+| Start Postgres              | `pnpm db:up`                 |
+| Stop Postgres               | `pnpm db:down`               |
+| Generate Prisma client      | `pnpm prisma:generate`       |
+| Dev migrations              | `pnpm prisma:migrate:dev`    |
 | Deploy migrations (CI/prod) | `pnpm prisma:migrate:deploy` |
 
 Run `pnpm lint`, `pnpm type-check`, and `pnpm test` before finishing a change.
@@ -105,11 +105,11 @@ See `.cursor/skills/nestjs-testing/SKILL.md` for patterns.
 
 ## Environment variables
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `PORT` | `3001` | API listen port |
-| `FRONTEND_ORIGIN` | `http://localhost:3000` | CORS allowed origin |
-| `DATABASE_URL` | see `.env.example` | PostgreSQL connection string |
+| Variable          | Default                 | Purpose                      |
+| ----------------- | ----------------------- | ---------------------------- |
+| `PORT`            | `3001`                  | API listen port              |
+| `FRONTEND_ORIGIN` | `http://localhost:3000` | CORS allowed origin          |
+| `DATABASE_URL`    | see `.env.example`      | PostgreSQL connection string |
 
 Never commit `.env` or secrets.
 
@@ -133,8 +133,8 @@ Never commit `.env` or secrets.
 
 Cursor skills in `.cursor/skills/` provide step-by-step workflows:
 
-| Skill | Use when |
-|-------|----------|
-| `nestjs-feature-module` | Adding or scaffolding a new NestJS module |
-| `nestjs-prisma` | Schema changes, migrations, PrismaService usage |
-| `nestjs-testing` | Writing or updating unit tests |
+| Skill                   | Use when                                        |
+| ----------------------- | ----------------------------------------------- |
+| `nestjs-feature-module` | Adding or scaffolding a new NestJS module       |
+| `nestjs-prisma`         | Schema changes, migrations, PrismaService usage |
+| `nestjs-testing`        | Writing or updating unit tests                  |
