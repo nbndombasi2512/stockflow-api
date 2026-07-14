@@ -2,6 +2,8 @@
 
 Instructions for AI coding agents working in **stockflow-api**, a standalone NestJS REST API for StockFlow.
 
+Always create a new branch for a new ticket, do not make changes directly on main.
+
 ## Project overview
 
 | Area | Choice |
