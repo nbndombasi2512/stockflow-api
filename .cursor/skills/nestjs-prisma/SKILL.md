@@ -34,6 +34,7 @@ export class ItemsService {
 ```
 
 **Rules:**
+
 - Inject `PrismaService` — never `new PrismaClient()`
 - Do not import `PrismaModule` in feature modules (it is `@Global()`)
 - Use Prisma's typed query API; avoid `$queryRaw` unless necessary
@@ -70,11 +71,11 @@ model Product {
 
 ## Migration commands
 
-| Environment | Command |
-|-------------|---------|
-| Local dev | `pnpm prisma:migrate:dev --name add_products` |
-| CI / production | `pnpm prisma:migrate:deploy` |
-| Regenerate client | `pnpm prisma:generate` |
+| Environment       | Command                                       |
+| ----------------- | --------------------------------------------- |
+| Local dev         | `pnpm prisma:migrate:dev --name add_products` |
+| CI / production   | `pnpm prisma:migrate:deploy`                  |
+| Regenerate client | `pnpm prisma:generate`                        |
 
 **Never** run `migrate dev` in CI or production — it can prompt interactively and may reset data.
 
@@ -102,10 +103,7 @@ const mockPrisma = {
 };
 
 const moduleRef = await Test.createTestingModule({
-  providers: [
-    ItemsService,
-    { provide: PrismaService, useValue: mockPrisma },
-  ],
+  providers: [ItemsService, { provide: PrismaService, useValue: mockPrisma }],
 }).compile();
 ```
 

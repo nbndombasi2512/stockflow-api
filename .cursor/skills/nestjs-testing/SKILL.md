@@ -19,6 +19,7 @@ description: >-
 All unit tests live in `src/<feature>/__tests__/index.spec.ts` — not co-located `*.spec.ts` next to each file.
 
 Jest config (`jest.config.js`):
+
 - `rootDir: "src"`
 - `testRegex: ".*\\.spec\\.ts$"`
 - `testEnvironment: "node"`
