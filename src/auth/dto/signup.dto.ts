@@ -1,0 +1,13 @@
+import { IsEmail, IsString, Matches, MinLength } from "class-validator";
+
+export class SignupDto {
+  @IsEmail()
+  email!: string;
+
+  @IsString()
+  @MinLength(8)
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)/, {
+    message: "password must contain at least one letter and one number",
+  })
+  password!: string;
+}
