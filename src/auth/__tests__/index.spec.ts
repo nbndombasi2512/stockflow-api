@@ -1,6 +1,6 @@
 import { ConflictException } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../../prisma/prisma.service";
 import { AuthService } from "../auth.service";
@@ -70,7 +70,7 @@ describe("AuthService", () => {
 
   it("throws ConflictException when email is already registered", async () => {
     mockPrisma.user.create.mockRejectedValue(
-      new Prisma.PrismaClientKnownRequestError("Unique constraint failed", {
+      new PrismaClientKnownRequestError("Unique constraint failed", {
         code: "P2002",
         clientVersion: "6.19.2",
       }),
