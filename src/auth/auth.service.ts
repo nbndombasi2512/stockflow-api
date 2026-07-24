@@ -1,4 +1,5 @@
 import { ConflictException, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { Prisma } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../prisma/prisma.service";
@@ -10,9 +11,17 @@ export interface SafeUser {
   createdAt: Date;
 }
 
+export interface LoginResult {
+  accessToken: string;
+  user: SafeUser;
+}
+
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async signup(dto: SignupDto): Promise<SafeUser> {
     const passwordHash = await bcrypt.hash(dto.password, 10);
@@ -41,5 +50,46 @@ export class AuthService {
 
       throw error;
     }
+  }
+
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<SafeUser | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+
+    if (!isPasswordValid) {
+      return null;
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      createdAt: user.createdAt,
+    };
+  }
+
+  async login(user: SafeUser): Promise<LoginResult> {
+    const accessToken = await this.jwtService.signAsync({
+      sub: user.id,
+      email: user.email,
+    });
+
+    return {
+      accessToken,
+      user,
+    };
+  }
+
+  logout(): void {
+    return;
   }
 }
