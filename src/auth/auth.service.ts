@@ -52,6 +52,17 @@ export class AuthService {
     }
   }
 
+  async findById(id: string): Promise<SafeUser | null> {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+      },
+    });
+  }
+
   async validateUser(
     email: string,
     password: string,

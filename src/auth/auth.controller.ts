@@ -19,6 +19,7 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { AuthService, type LoginResult, type SafeUser } from "./auth.service";
+import { Public } from "./decorators/public.decorator";
 import { LoginDto } from "./dto/login.dto";
 import { LoginResponseDto } from "./dto/login-response.dto";
 import { SafeUserDto } from "./dto/safe-user.dto";
@@ -33,6 +34,7 @@ interface AuthenticatedRequest {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post("signup")
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: "Register a new user" })
@@ -46,6 +48,7 @@ export class AuthController {
     return this.authService.signup(dto);
   }
 
+  @Public()
   @Post("login")
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard("local"))
@@ -64,6 +67,7 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @Public()
   @Post("logout")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Log out the current session" })

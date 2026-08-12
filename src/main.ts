@@ -26,6 +26,7 @@ async function bootstrap(): Promise<void> {
     .setTitle("StockFlow API")
     .setDescription("REST API for StockFlow")
     .setVersion("0.0.0")
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup("docs", app, document);
