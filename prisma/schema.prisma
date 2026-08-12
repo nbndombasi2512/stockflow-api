@@ -15,3 +15,13 @@ model User {
 
   @@map("users")
 }
+
+model Location {
+  id        String   @id @default(uuid())
+  name      String
+  notes     String?
+  archived  Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("locations")
+}
