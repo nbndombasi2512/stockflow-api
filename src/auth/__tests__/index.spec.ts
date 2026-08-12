@@ -1,10 +1,19 @@
-import { ConflictException } from "@nestjs/common";
+import {
+  ConflictException,
+  ExecutionContext,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { Prisma } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../../prisma/prisma.service";
 import { AuthService } from "../auth.service";
+import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
+import { JwtAuthGuard } from "../guards/jwt-auth.guard";
+import { JwtStrategy } from "../strategies/jwt.strategy";
 
 jest.mock("bcrypt", () => ({
   hash: jest.fn(),
@@ -31,6 +40,11 @@ describe("AuthService", () => {
       create: jest.fn(),
       findUnique: jest.fn(),
     },
+  } as {
+    user: {
+      create: jest.Mock;
+      findUnique: jest.Mock;
+    };
   };
 
   const mockJwtService = {
@@ -155,5 +169,123 @@ describe("AuthService", () => {
       user: safeUser,
     });
     expect(result.user).not.toHaveProperty("passwordHash");
+  });
+
+  it("returns a safe user when finding by id", async () => {
+    mockPrisma.user.findUnique.mockResolvedValue(safeUser);
+
+    const service = await setup();
+    const result = await service.findById("user-1");
+
+    expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
+      where: { id: "user-1" },
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+      },
+    });
+    expect(result).toEqual(safeUser);
+  });
+});
+
+describe("JwtStrategy", () => {
+  const safeUser = {
+    id: "user-1",
+    email: "alice@example.com",
+    createdAt: new Date("2026-07-16T12:00:00.000Z"),
+  };
+
+  const mockAuthService = {
+    findById: jest.fn(),
+  };
+
+  const setup = async () => {
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        JwtStrategy,
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockReturnValue("test-secret"),
+          },
+        },
+        { provide: AuthService, useValue: mockAuthService },
+      ],
+    }).compile();
+
+    return moduleRef.get(JwtStrategy);
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("returns the user when the token subject exists", async () => {
+    mockAuthService.findById.mockResolvedValue(safeUser);
+
+    const strategy = await setup();
+    const result = await strategy.validate({
+      sub: "user-1",
+      email: "alice@example.com",
+    });
+
+    expect(mockAuthService.findById).toHaveBeenCalledWith("user-1");
+    expect(result).toEqual(safeUser);
+  });
+
+  it("throws UnauthorizedException when the user is missing", async () => {
+    mockAuthService.findById.mockResolvedValue(null);
+
+    const strategy = await setup();
+
+    await expect(
+      strategy.validate({
+        sub: "missing-user",
+        email: "missing@example.com",
+      }),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
+  });
+});
+
+describe("JwtAuthGuard", () => {
+  const createContext = (): ExecutionContext => {
+    const handler = jest.fn();
+    const classRef = jest.fn();
+
+    return {
+      getHandler: () => handler,
+      getClass: () => classRef,
+    } as unknown as ExecutionContext;
+  };
+
+  it("allows public routes without JWT validation", () => {
+    const reflector = {
+      getAllAndOverride: jest.fn().mockReturnValue(true),
+    } as unknown as Reflector;
+    const guard = new JwtAuthGuard(reflector);
+    const context = createContext();
+
+    expect(guard.canActivate(context)).toBe(true);
+    expect(reflector.getAllAndOverride).toHaveBeenCalledWith(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+  });
+
+  it("delegates to AuthGuard when the route is not public", () => {
+    const reflector = {
+      getAllAndOverride: jest.fn().mockReturnValue(false),
+    } as unknown as Reflector;
+    const guard = new JwtAuthGuard(reflector);
+    const context = createContext();
+    const parentCanActivate = jest
+      .spyOn(Object.getPrototypeOf(JwtAuthGuard.prototype), "canActivate")
+      .mockReturnValue(true);
+
+    expect(guard.canActivate(context)).toBe(true);
+    expect(parentCanActivate).toHaveBeenCalledWith(context);
+
+    parentCanActivate.mockRestore();
   });
 });
