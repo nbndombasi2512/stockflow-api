@@ -25,3 +25,18 @@ model Location {
 
   @@map("locations")
 }
+
+model Product {
+  id               String   @id @default(uuid())
+  name             String
+  sku              String   @unique
+  description      String
+  category         String
+  unit             String
+  reorderThreshold Int?     @map("reorder_threshold")
+  imageUrl         String?  @map("image_url")
+  archived         Boolean  @default(false)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@map("products")
+}
