@@ -7,6 +7,7 @@ import { configuration } from "./config/configuration";
 import { HealthModule } from "./health/health.module";
 import { LocationsModule } from "./locations/locations.module";
 import { PrismaModule } from "./prisma/prisma.module";
+import { ProductsModule } from "./products/products.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PrismaModule } from "./prisma/prisma.module";
     HealthModule,
     AuthModule,
     LocationsModule,
+    ProductsModule,
   ],
   providers: [
     {
